@@ -12,9 +12,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // @name         Jira tasks link copying
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Creates a new userscript
+// @description  Adds button allowing to copy tasks' links
 // @author       Łukasz Brzózko
-// @match        https://jira.nd0.pl/browse/*
+// @match        https://jira.nd0.pl/*
+// @exclude      https://jira.nd0.pl/plugins/servlet/*
 // @icon         https://jira.nd0.pl/s/a3v501/940003/1dlckms/_/images/fav-jsw.png
 // @resource styles    https://raw.githubusercontent.com/lukasz-brzozko/jira-tasks-link-copying/main/dist/styles.css
 // @updateURL    https://raw.githubusercontent.com/lukasz-brzozko/jira-tasks-link-copying/main/dist/index.meta.js
