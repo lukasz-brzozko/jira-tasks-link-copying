@@ -84,6 +84,7 @@
 
     const btnEl = document.createElement("button");
     btnEl.className = "copy-to-clipboard-btn";
+    btnEl.title = "Copy to clipboard";
     btnEl.innerHTML = `
       <span class="copy-icon js-copy-icon">&#128203</span>
       <span class="copy-icon copy-icon--success js-copy-success invisible">&#10003</span>
