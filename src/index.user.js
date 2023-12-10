@@ -4,6 +4,10 @@
     link: ".search-results .issue-list .splitview-issue-link",
   };
 
+  const MAX_ATTEMPTS = 5;
+
+  let attempts = 0;
+
   const linkStyles = async () => {
     const myCss = GM_getResourceText("styles");
     const styleTag = document.createElement("style");
@@ -53,8 +57,8 @@
     successIcon.classList.toggle("invisible");
   };
 
-  const copyLinksIntoClipboard = ({ searchResults, e }) => {
-    const links = [...searchResults.querySelectorAll(SELECTORS.link)];
+  const copyLinksIntoClipboard = (e) => {
+    const links = [...document.querySelectorAll(SELECTORS.link)];
     const { currentTarget: button } = e;
     const newLinks = createNewLinks(links);
     const clipboardItem = createClipBoardItem(newLinks);
@@ -71,7 +75,7 @@
     }, 3000);
   };
 
-  const generateBtn = (searchResults) => {
+  const generateBtn = () => {
     const btnContainer = document.querySelector(
       ".simple-issue-list .pagination-view"
     );
@@ -84,22 +88,20 @@
       <span class="copy-icon js-copy-icon">&#128203</span>
       <span class="copy-icon copy-icon--success js-copy-success invisible">&#10003</span>
     `;
-    btnEl.addEventListener("click", (e) =>
-      copyLinksIntoClipboard({ searchResults, e })
-    );
+    btnEl.addEventListener("click", (e) => copyLinksIntoClipboard(e));
 
     btnContainer.appendChild(btnEl);
   };
 
   const init = () => {
-    const searchResults = document.querySelector(SELECTORS.linksContainer);
-    if (!searchResults) return console.error("Brak kontenera.");
-
-    const links = searchResults.querySelectorAll(SELECTORS.link);
+    const links = document.querySelectorAll(SELECTORS.link);
     if (links.length > 0) {
       linkStyles();
-      generateBtn(searchResults);
+      generateBtn();
+    } else if (attempts === MAX_ATTEMPTS) {
+      return console.error("Brak kontenera.");
     } else {
+      attempts++;
       setTimeout(init, 1000);
     }
   };
