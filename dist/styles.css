@@ -1,0 +1,17 @@
+.copy-to-clipboard-btn {
+  all: unset;
+  height: 30px;
+  margin-right: 18px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+  transition: background-color 0.1s ease-out;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: var(--aui-btn-bg);
+  color: var(--aui-btn-text);
+}
+
+.copy-to-clipboard-btn:hover {
+  --aui-btn-bg: var(--aui-button-default-hover-bg-color);
+  --aui-btn-text: var(--aui-button-default-text-color);
+}
