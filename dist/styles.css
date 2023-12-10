@@ -15,3 +15,12 @@
   --aui-btn-bg: var(--aui-button-default-hover-bg-color);
   --aui-btn-text: var(--aui-button-default-text-color);
 }
+
+.copy-icon {
+  transition: visibility 0.5s ease, opacity 0.5s ease;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
