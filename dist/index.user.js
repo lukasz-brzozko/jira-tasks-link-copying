@@ -26,6 +26,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     linksContainer: ".search-results",
     link: ".search-results .issue-list .splitview-issue-link"
   };
+  var MAX_ATTEMPTS = 5;
+  var attempts = 0;
   var linkStyles = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       var myCss, styleTag;
@@ -84,10 +86,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     copyIcon.classList.toggle("invisible");
     successIcon.classList.toggle("invisible");
   };
-  var copyLinksIntoClipboard = function copyLinksIntoClipboard(_ref5) {
-    var searchResults = _ref5.searchResults,
-      e = _ref5.e;
-    var links = _toConsumableArray(searchResults.querySelectorAll(SELECTORS.link));
+  var copyLinksIntoClipboard = function copyLinksIntoClipboard(e) {
+    var links = _toConsumableArray(document.querySelectorAll(SELECTORS.link));
     var button = e.currentTarget;
     var newLinks = createNewLinks(links);
     var clipboardItem = createClipBoardItem(newLinks);
@@ -107,28 +107,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     }, 3000);
   };
-  var generateBtn = function generateBtn(searchResults) {
+  var generateBtn = function generateBtn() {
     var btnContainer = document.querySelector(".simple-issue-list .pagination-view");
     if (!btnContainer) return;
     var btnEl = document.createElement("button");
     btnEl.className = "copy-to-clipboard-btn";
     btnEl.innerHTML = "\n      <span class=\"copy-icon js-copy-icon\">&#128203</span>\n      <span class=\"copy-icon copy-icon--success js-copy-success invisible\">&#10003</span>\n    ";
     btnEl.addEventListener("click", function (e) {
-      return copyLinksIntoClipboard({
-        searchResults: searchResults,
-        e: e
-      });
+      return copyLinksIntoClipboard(e);
     });
     btnContainer.appendChild(btnEl);
   };
   var init = function init() {
-    var searchResults = document.querySelector(SELECTORS.linksContainer);
-    if (!searchResults) return console.error("Brak kontenera.");
-    var links = searchResults.querySelectorAll(SELECTORS.link);
+    var links = document.querySelectorAll(SELECTORS.link);
     if (links.length > 0) {
       linkStyles();
-      generateBtn(searchResults);
+      generateBtn();
+    } else if (attempts === MAX_ATTEMPTS) {
+      return console.error("Brak kontenera.");
     } else {
+      attempts++;
       setTimeout(init, 1000);
     }
   };
