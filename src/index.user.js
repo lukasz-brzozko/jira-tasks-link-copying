@@ -1,18 +1,17 @@
-// ==UserScript==
-// @name         Jira tasks link copying
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Creates a new userscript
-// @author       Łukasz Brzózko
-// @match        https://jira.nd0.pl/browse/*
-// @icon         https://jira.nd0.pl/s/a3v501/940003/1dlckms/_/images/fav-jsw.png
-// @resource styles    https://raw.githubusercontent.com/lukasz-brzozko/jira-tasks-link-copying/main/dist/styles.css
-// @updateURL    https://raw.githubusercontent.com/lukasz-brzozko/jira-tasks-link-copying/main/dist/index.meta.js
-// @downloadURL  https://raw.githubusercontent.com/lukasz-brzozko/jira-tasks-link-copying/main/dist/index.user.js
-// @grant        none
-// ==/UserScript==
-
 (function () {
+  const SELECTORS = {
+    linksContainer: ".search-results",
+    link: ".search-results .issue-list .splitview-issue-link",
+  };
+
+  const linkStyles = async () => {
+    const myCss = GM_getResourceText("styles");
+    const styleTag = document.createElement("style");
+    styleTag.textContent = myCss;
+
+    document.body.prepend(styleTag);
+  };
+
   const createNewLinks = (links) => {
     const newLinks = links.map((link) => {
       const { href } = link;
@@ -48,14 +47,31 @@
     return clipboardItem;
   };
 
-  const copyLinksIntoClipboard = (links) => {
+  const toggleIconsVisibility = ({ button, copyIcon, successIcon }) => {
+    button.classList.toggle("active");
+    copyIcon.classList.toggle("invisible");
+    successIcon.classList.toggle("invisible");
+  };
+
+  const copyLinksIntoClipboard = ({ searchResults, e }) => {
+    const links = [...searchResults.querySelectorAll(SELECTORS.link)];
+    const { currentTarget: button } = e;
     const newLinks = createNewLinks(links);
     const clipboardItem = createClipBoardItem(newLinks);
 
     navigator.clipboard.write([clipboardItem]);
+
+    const copyIcon = button.querySelector(".js-copy-icon");
+    const successIcon = button.querySelector(".js-copy-success");
+
+    toggleIconsVisibility({ button, copyIcon, successIcon });
+
+    setTimeout(() => {
+      toggleIconsVisibility({ button, copyIcon, successIcon });
+    }, 3000);
   };
 
-  const generateBtn = (links) => {
+  const generateBtn = (searchResults) => {
     const btnContainer = document.querySelector(
       ".simple-issue-list .pagination-view"
     );
@@ -64,23 +80,25 @@
 
     const btnEl = document.createElement("button");
     btnEl.className = "copy-to-clipboard-btn";
-    btnEl.innerHTML = "&#128203";
-    btnEl.addEventListener("click", () => copyLinksIntoClipboard(links));
+    btnEl.innerHTML = `
+      <span class="copy-icon js-copy-icon">&#128203</span>
+      <span class="copy-icon copy-icon--success js-copy-success invisible">&#10003</span>
+    `;
+    btnEl.addEventListener("click", (e) =>
+      copyLinksIntoClipboard({ searchResults, e })
+    );
 
     btnContainer.appendChild(btnEl);
   };
 
   const init = () => {
-    console.clear();
-    console.log("init");
-    const links = [
-      ...document.querySelectorAll(
-        ".search-results .issue-list .splitview-issue-link"
-      ),
-    ];
+    const searchResults = document.querySelector(SELECTORS.linksContainer);
+    if (!searchResults) return console.error("Brak kontenera.");
 
+    const links = searchResults.querySelectorAll(SELECTORS.link);
     if (links.length > 0) {
-      generateBtn(links);
+      linkStyles();
+      generateBtn(searchResults);
     } else {
       setTimeout(init, 1000);
     }
