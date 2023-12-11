@@ -12,9 +12,8 @@
 
 .aui-group.pagination-view.count-pagination
   .pagination
-  a
-  :is(:first-child, :last-child) {
-  margin-inline: 0;
+  a:is(:first-child, :last-child) {
+  margin-inline: 0 !important;
 }
 
 .copy-to-clipboard-btn {
