@@ -35,15 +35,11 @@
   const createClipBoardItem = (newLinks) => {
     const clipboardItem = new ClipboardItem({
       "text/plain": new Blob(
-        [
-          `<ul>${newLinks
-            .map(({ textContent }) => textContent)
-            .join(" ")}</ul>`,
-        ],
+        [`<ul>${newLinks.map(({ textContent }) => textContent).join("")}</ul>`],
         { type: "text/plain" }
       ),
       "text/html": new Blob(
-        [`<ul>${newLinks.map(({ outerHTML }) => outerHTML).join(" ")}</ul>`],
+        [`<ul>${newLinks.map(({ outerHTML }) => outerHTML).join("")}</ul>`],
         { type: "text/html" }
       ),
     });

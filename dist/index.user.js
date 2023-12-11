@@ -67,13 +67,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       "text/plain": new Blob(["<ul>".concat(newLinks.map(function (_ref2) {
         var textContent = _ref2.textContent;
         return textContent;
-      }).join(" "), "</ul>")], {
+      }).join(""), "</ul>")], {
         type: "text/plain"
       }),
       "text/html": new Blob(["<ul>".concat(newLinks.map(function (_ref3) {
         var outerHTML = _ref3.outerHTML;
         return outerHTML;
-      }).join(" "), "</ul>")], {
+      }).join(""), "</ul>")], {
         type: "text/html"
       })
     });
