@@ -1,13 +1,20 @@
 .aui-group.pagination-view.count-pagination .pagination-container {
-  padding-left: 5px;
+  padding-left: 0;
 }
 
 .aui-group.pagination-view.count-pagination .pagination {
-  padding-right: 5px !important;
+  padding-right: 0 !important;
 }
 
 .aui-group.pagination-view.count-pagination .pagination :is(a, strong) {
   margin-inline: 5px;
+}
+
+.aui-group.pagination-view.count-pagination
+  .pagination
+  a
+  :is(:first-child, :last-child) {
+  margin-inline: 0;
 }
 
 .copy-to-clipboard-btn {
