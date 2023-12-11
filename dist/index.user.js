@@ -114,7 +114,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var btnEl = document.createElement("button");
     btnEl.className = "copy-to-clipboard-btn";
     btnEl.title = "Copy to clipboard";
-    btnEl.innerHTML = "\n      <span class=\"copy-icon js-copy-icon\">&#128203</span>\n      <span class=\"copy-icon copy-icon--success js-copy-success invisible\">&#10003</span>\n    ";
+    btnEl.innerHTML = "\n      <span class=\"copy-icon js-copy-icon aui-icon aui-icon-small aui-iconfont-copy\" role=\"img\" aria-label=\"Insert meaningful text here for accessibility\"></span>\n      <span class=\"copy-icon copy-icon--success js-copy-success invisible aui-icon aui-icon-small aui-iconfont-check\" role=\"img\" aria-label=\"Insert meaningful text here for accessibility\"></span>\n    ";
     btnEl.addEventListener("click", function (e) {
       return copyLinksIntoClipboard(e);
     });

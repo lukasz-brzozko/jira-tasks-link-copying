@@ -82,8 +82,8 @@
     btnEl.className = "copy-to-clipboard-btn";
     btnEl.title = "Copy to clipboard";
     btnEl.innerHTML = `
-      <span class="copy-icon js-copy-icon">&#128203</span>
-      <span class="copy-icon copy-icon--success js-copy-success invisible">&#10003</span>
+      <span class="copy-icon js-copy-icon aui-icon aui-icon-small aui-iconfont-copy" role="img" aria-label="Insert meaningful text here for accessibility"></span>
+      <span class="copy-icon copy-icon--success js-copy-success invisible aui-icon aui-icon-small aui-iconfont-check" role="img" aria-label="Insert meaningful text here for accessibility"></span>
     `;
     btnEl.addEventListener("click", (e) => copyLinksIntoClipboard(e));
 
