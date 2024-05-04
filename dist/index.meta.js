@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Jira tasks link copying
+// @name         Jira Tasks Link Copying
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.1.1
 // @description  Adds button allowing to copy tasks' links
 // @author       Łukasz Brzózko
 // @match        https://jira.nd0.pl/*
