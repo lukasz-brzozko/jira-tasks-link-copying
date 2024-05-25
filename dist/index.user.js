@@ -11,7 +11,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // ==UserScript==
 // @name         Jira Tasks Link Copying
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2
 // @description  Adds button allowing to copy tasks' links
 // @author       Łukasz Brzózko
 // @match        https://jira.nd0.pl/*
@@ -26,7 +26,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 (function () {
   var SELECTORS = {
     linksContainer: ".search-results",
-    link: ".search-results .issue-list .splitview-issue-link"
+    link: ".search-results .issue-list .splitview-issue-link",
+    jqlTextArea: "textarea#advanced-search"
   };
   var MAX_ATTEMPTS = 5;
   var attempts = 0;
@@ -63,18 +64,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
     return newLinks;
   };
-  var createClipBoardItem = function createClipBoardItem(newLinks) {
+  var createClipBoardItem = function createClipBoardItem(_ref2) {
+    var newLinks = _ref2.newLinks,
+      filterUrl = _ref2.filterUrl;
     var clipboardItem = new ClipboardItem({
-      "text/plain": new Blob(["<ul>".concat(newLinks.map(function (_ref2) {
-        var textContent = _ref2.textContent;
-        return textContent;
-      }).join(""), "</ul>")], {
+      "text/plain": new Blob([filterUrl], {
         type: "text/plain"
       }),
-      "text/html": new Blob(["<ul>".concat(newLinks.map(function (_ref3) {
+      "text/html": new Blob(["<ol>".concat(newLinks.map(function (_ref3) {
         var outerHTML = _ref3.outerHTML;
         return outerHTML;
-      }).join(""), "</ul>")], {
+      }).join(""), "</ol>")], {
         type: "text/html"
       })
     });
@@ -88,11 +88,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     copyIcon.classList.toggle("invisible");
     successIcon.classList.toggle("invisible");
   };
+  var getFilterUrl = function getFilterUrl() {
+    var jqlTextArea = document.querySelector(SELECTORS.jqlTextArea);
+    var url = new URL("https://jira.nd0.pl/issues/");
+    url.searchParams.set("jql", jqlTextArea.value);
+    return url.toString();
+  };
   var copyLinksIntoClipboard = function copyLinksIntoClipboard(e) {
     var links = _toConsumableArray(document.querySelectorAll(SELECTORS.link));
     var button = e.currentTarget;
     var newLinks = createNewLinks(links);
-    var clipboardItem = createClipBoardItem(newLinks);
+    var filterUrl = getFilterUrl();
+    var clipboardItem = createClipBoardItem({
+      newLinks: newLinks,
+      filterUrl: filterUrl
+    });
     navigator.clipboard.write([clipboardItem]);
     var copyIcon = button.querySelector(".js-copy-icon");
     var successIcon = button.querySelector(".js-copy-success");

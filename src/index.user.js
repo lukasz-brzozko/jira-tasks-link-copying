@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Tasks Link Copying
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2
 // @description  Adds button allowing to copy tasks' links
 // @author       Łukasz Brzózko
 // @match        https://jira.nd0.pl/*
@@ -17,6 +17,7 @@
   const SELECTORS = {
     linksContainer: ".search-results",
     link: ".search-results .issue-list .splitview-issue-link",
+    jqlTextArea: "textarea#advanced-search",
   };
 
   const MAX_ATTEMPTS = 5;
@@ -47,14 +48,11 @@
     return newLinks;
   };
 
-  const createClipBoardItem = (newLinks) => {
+  const createClipBoardItem = ({ newLinks, filterUrl }) => {
     const clipboardItem = new ClipboardItem({
-      "text/plain": new Blob(
-        [`<ul>${newLinks.map(({ textContent }) => textContent).join("")}</ul>`],
-        { type: "text/plain" }
-      ),
+      "text/plain": new Blob([filterUrl], { type: "text/plain" }),
       "text/html": new Blob(
-        [`<ul>${newLinks.map(({ outerHTML }) => outerHTML).join("")}</ul>`],
+        [`<ol>${newLinks.map(({ outerHTML }) => outerHTML).join("")}</ol>`],
         { type: "text/html" }
       ),
     });
@@ -68,11 +66,21 @@
     successIcon.classList.toggle("invisible");
   };
 
+  const getFilterUrl = () => {
+    const jqlTextArea = document.querySelector(SELECTORS.jqlTextArea);
+    const url = new URL("https://jira.nd0.pl/issues/");
+
+    url.searchParams.set("jql", jqlTextArea.value);
+
+    return url.toString();
+  };
+
   const copyLinksIntoClipboard = (e) => {
     const links = [...document.querySelectorAll(SELECTORS.link)];
     const { currentTarget: button } = e;
     const newLinks = createNewLinks(links);
-    const clipboardItem = createClipBoardItem(newLinks);
+    const filterUrl = getFilterUrl();
+    const clipboardItem = createClipBoardItem({ newLinks, filterUrl });
 
     navigator.clipboard.write([clipboardItem]);
 
