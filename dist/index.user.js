@@ -22,6 +22,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // @downloadURL  https://raw.githubusercontent.com/lukasz-brzozko/jira-tasks-link-copying/main/dist/index.user.js
 // @grant        GM_getResourceText
 // ==/UserScript==
+
 (function () {
   var SELECTORS = {
     linksContainer: ".search-results",
